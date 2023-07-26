@@ -1,0 +1,670 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Proyecto_HotelesModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Calificaciones">
+          <Key>
+            <PropertyRef Name="idCalificacion" />
+          </Key>
+          <Property Name="idCalificacion" Type="int" Nullable="false" />
+          <Property Name="idUsuario" Type="bigint" Nullable="false" />
+          <Property Name="calificacion" Type="int" Nullable="false" />
+          <Property Name="descripcion" Type="nchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="Categorias">
+          <Key>
+            <PropertyRef Name="idCategoria" />
+          </Key>
+          <Property Name="idCategoria" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nombreCategoria" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="precio" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="capacidad" Type="int" Nullable="false" />
+          <Property Name="idServicio" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Errores">
+          <Key>
+            <PropertyRef Name="idError" />
+          </Key>
+          <Property Name="idError" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="descripcion" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="isActive" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Facturas">
+          <Key>
+            <PropertyRef Name="idFactura" />
+          </Key>
+          <Property Name="idFactura" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="idReserva" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="precio" Type="int" Nullable="false" />
+          <Property Name="IVA" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="total" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Habitaciones">
+          <Key>
+            <PropertyRef Name="idHabitacion" />
+          </Key>
+          <Property Name="idHabitacion" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="idCategoria" Type="int" Nullable="false" />
+          <Property Name="idHotel" Type="int" Nullable="false" />
+          <Property Name="descripcion" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="disponible" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Hoteles">
+          <Key>
+            <PropertyRef Name="idHotel" />
+          </Key>
+          <Property Name="idHotel" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ubicacion" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="idCalificacion" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Reservas">
+          <Key>
+            <PropertyRef Name="idReserva" />
+          </Key>
+          <Property Name="idReserva" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="idHabitacion" Type="int" Nullable="false" />
+          <Property Name="idUsuario" Type="bigint" Nullable="false" />
+          <Property Name="fechaIngreso" Type="date" Nullable="false" />
+          <Property Name="fechaEgreso" Type="date" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Roles">
+          <Key>
+            <PropertyRef Name="idRol" />
+          </Key>
+          <Property Name="idRol" Type="tinyint" Nullable="false" />
+          <Property Name="nombreRol" Type="nchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Servicios">
+          <Key>
+            <PropertyRef Name="idServicio" />
+          </Key>
+          <Property Name="idServicio" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Wifi" Type="bit" Nullable="false" />
+          <Property Name="AC" Type="bit" Nullable="false" />
+          <Property Name="TV" Type="bit" Nullable="false" />
+          <Property Name="aguaCaliente" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Usuarios">
+          <Key>
+            <PropertyRef Name="idUsuario" />
+          </Key>
+          <Property Name="idUsuario" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="correoElectronico" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="contrasenna" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="identificacion" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="nombre" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="estado" Type="bit" Nullable="false" />
+          <Property Name="idRol" Type="tinyint" Nullable="false" />
+          <Property Name="UsaClaveTemporal" Type="bit" Nullable="false" />
+          <Property Name="FechaCaducidad" Type="datetime" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Calificaciones_Usuarios">
+          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="1" />
+          <End Role="Calificaciones" Type="Self.Calificaciones" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuarios">
+              <PropertyRef Name="idUsuario" />
+            </Principal>
+            <Dependent Role="Calificaciones">
+              <PropertyRef Name="idUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Categorias_Servicios">
+          <End Role="Servicios" Type="Self.Servicios" Multiplicity="1" />
+          <End Role="Categorias" Type="Self.Categorias" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Servicios">
+              <PropertyRef Name="idServicio" />
+            </Principal>
+            <Dependent Role="Categorias">
+              <PropertyRef Name="idServicio" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Facturas_Reservas">
+          <End Role="Reservas" Type="Self.Reservas" Multiplicity="1" />
+          <End Role="Facturas" Type="Self.Facturas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Reservas">
+              <PropertyRef Name="idReserva" />
+            </Principal>
+            <Dependent Role="Facturas">
+              <PropertyRef Name="idReserva" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Habitaciones_Categorias">
+          <End Role="Categorias" Type="Self.Categorias" Multiplicity="1" />
+          <End Role="Habitaciones" Type="Self.Habitaciones" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Categorias">
+              <PropertyRef Name="idCategoria" />
+            </Principal>
+            <Dependent Role="Habitaciones">
+              <PropertyRef Name="idCategoria" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Habitaciones_Hoteles">
+          <End Role="Hoteles" Type="Self.Hoteles" Multiplicity="1" />
+          <End Role="Habitaciones" Type="Self.Habitaciones" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Hoteles">
+              <PropertyRef Name="idHotel" />
+            </Principal>
+            <Dependent Role="Habitaciones">
+              <PropertyRef Name="idHotel" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Hoteles_Calificaciones">
+          <End Role="Calificaciones" Type="Self.Calificaciones" Multiplicity="1" />
+          <End Role="Hoteles" Type="Self.Hoteles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Calificaciones">
+              <PropertyRef Name="idCalificacion" />
+            </Principal>
+            <Dependent Role="Hoteles">
+              <PropertyRef Name="idCalificacion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Reservas_Habitaciones">
+          <End Role="Habitaciones" Type="Self.Habitaciones" Multiplicity="1" />
+          <End Role="Reservas" Type="Self.Reservas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Habitaciones">
+              <PropertyRef Name="idHabitacion" />
+            </Principal>
+            <Dependent Role="Reservas">
+              <PropertyRef Name="idHabitacion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Reservas_Usuarios">
+          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="1" />
+          <End Role="Reservas" Type="Self.Reservas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuarios">
+              <PropertyRef Name="idUsuario" />
+            </Principal>
+            <Dependent Role="Reservas">
+              <PropertyRef Name="idUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Usuarios_Roles">
+          <End Role="Roles" Type="Self.Roles" Multiplicity="1" />
+          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Roles">
+              <PropertyRef Name="idRol" />
+            </Principal>
+            <Dependent Role="Usuarios">
+              <PropertyRef Name="idRol" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Proyecto_HotelesModelStoreContainer">
+          <EntitySet Name="Calificaciones" EntityType="Self.Calificaciones" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Categorias" EntityType="Self.Categorias" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Errores" EntityType="Self.Errores" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Facturas" EntityType="Self.Facturas" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Habitaciones" EntityType="Self.Habitaciones" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Hoteles" EntityType="Self.Hoteles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Reservas" EntityType="Self.Reservas" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Servicios" EntityType="Self.Servicios" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Usuarios" EntityType="Self.Usuarios" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Calificaciones_Usuarios" Association="Self.FK_Calificaciones_Usuarios">
+            <End Role="Usuarios" EntitySet="Usuarios" />
+            <End Role="Calificaciones" EntitySet="Calificaciones" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Categorias_Servicios" Association="Self.FK_Categorias_Servicios">
+            <End Role="Servicios" EntitySet="Servicios" />
+            <End Role="Categorias" EntitySet="Categorias" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Facturas_Reservas" Association="Self.FK_Facturas_Reservas">
+            <End Role="Reservas" EntitySet="Reservas" />
+            <End Role="Facturas" EntitySet="Facturas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Habitaciones_Categorias" Association="Self.FK_Habitaciones_Categorias">
+            <End Role="Categorias" EntitySet="Categorias" />
+            <End Role="Habitaciones" EntitySet="Habitaciones" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Habitaciones_Hoteles" Association="Self.FK_Habitaciones_Hoteles">
+            <End Role="Hoteles" EntitySet="Hoteles" />
+            <End Role="Habitaciones" EntitySet="Habitaciones" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Hoteles_Calificaciones" Association="Self.FK_Hoteles_Calificaciones">
+            <End Role="Calificaciones" EntitySet="Calificaciones" />
+            <End Role="Hoteles" EntitySet="Hoteles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Reservas_Habitaciones" Association="Self.FK_Reservas_Habitaciones">
+            <End Role="Habitaciones" EntitySet="Habitaciones" />
+            <End Role="Reservas" EntitySet="Reservas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Reservas_Usuarios" Association="Self.FK_Reservas_Usuarios">
+            <End Role="Usuarios" EntitySet="Usuarios" />
+            <End Role="Reservas" EntitySet="Reservas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Usuarios_Roles" Association="Self.FK_Usuarios_Roles">
+            <End Role="Roles" EntitySet="Roles" />
+            <End Role="Usuarios" EntitySet="Usuarios" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Proyecto_HotelesModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Calificaciones">
+          <Key>
+            <PropertyRef Name="idCalificacion" />
+          </Key>
+          <Property Name="idCalificacion" Type="Int32" Nullable="false" />
+          <Property Name="idUsuario" Type="Int64" Nullable="false" />
+          <Property Name="calificacion" Type="Int32" Nullable="false" />
+          <Property Name="descripcion" Type="String" MaxLength="100" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="Usuarios" Relationship="Self.FK_Calificaciones_Usuarios" FromRole="Calificaciones" ToRole="Usuarios" />
+          <NavigationProperty Name="Hoteles" Relationship="Self.FK_Hoteles_Calificaciones" FromRole="Calificaciones" ToRole="Hoteles" />
+        </EntityType>
+        <EntityType Name="Categorias">
+          <Key>
+            <PropertyRef Name="idCategoria" />
+          </Key>
+          <Property Name="idCategoria" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nombreCategoria" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="precio" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="capacidad" Type="Int32" Nullable="false" />
+          <Property Name="idServicio" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Servicios" Relationship="Self.FK_Categorias_Servicios" FromRole="Categorias" ToRole="Servicios" />
+          <NavigationProperty Name="Habitaciones" Relationship="Self.FK_Habitaciones_Categorias" FromRole="Categorias" ToRole="Habitaciones" />
+        </EntityType>
+        <EntityType Name="Errores">
+          <Key>
+            <PropertyRef Name="idError" />
+          </Key>
+          <Property Name="idError" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="descripcion" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="isActive" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Facturas">
+          <Key>
+            <PropertyRef Name="idFactura" />
+          </Key>
+          <Property Name="idFactura" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="idReserva" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="precio" Type="Int32" Nullable="false" />
+          <Property Name="IVA" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="total" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+          <NavigationProperty Name="Reservas" Relationship="Self.FK_Facturas_Reservas" FromRole="Facturas" ToRole="Reservas" />
+        </EntityType>
+        <EntityType Name="Habitaciones">
+          <Key>
+            <PropertyRef Name="idHabitacion" />
+          </Key>
+          <Property Name="idHabitacion" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="idCategoria" Type="Int32" Nullable="false" />
+          <Property Name="idHotel" Type="Int32" Nullable="false" />
+          <Property Name="descripcion" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="disponible" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Categorias" Relationship="Self.FK_Habitaciones_Categorias" FromRole="Habitaciones" ToRole="Categorias" />
+          <NavigationProperty Name="Hoteles" Relationship="Self.FK_Habitaciones_Hoteles" FromRole="Habitaciones" ToRole="Hoteles" />
+          <NavigationProperty Name="Reservas" Relationship="Self.FK_Reservas_Habitaciones" FromRole="Habitaciones" ToRole="Reservas" />
+        </EntityType>
+        <EntityType Name="Hoteles">
+          <Key>
+            <PropertyRef Name="idHotel" />
+          </Key>
+          <Property Name="idHotel" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ubicacion" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="idCalificacion" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Calificaciones" Relationship="Self.FK_Hoteles_Calificaciones" FromRole="Hoteles" ToRole="Calificaciones" />
+          <NavigationProperty Name="Habitaciones" Relationship="Self.FK_Habitaciones_Hoteles" FromRole="Hoteles" ToRole="Habitaciones" />
+        </EntityType>
+        <EntityType Name="Reservas">
+          <Key>
+            <PropertyRef Name="idReserva" />
+          </Key>
+          <Property Name="idReserva" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="idHabitacion" Type="Int32" Nullable="false" />
+          <Property Name="idUsuario" Type="Int64" Nullable="false" />
+          <Property Name="fechaIngreso" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="fechaEgreso" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="Facturas" Relationship="Self.FK_Facturas_Reservas" FromRole="Reservas" ToRole="Facturas" />
+          <NavigationProperty Name="Habitaciones" Relationship="Self.FK_Reservas_Habitaciones" FromRole="Reservas" ToRole="Habitaciones" />
+          <NavigationProperty Name="Usuarios" Relationship="Self.FK_Reservas_Usuarios" FromRole="Reservas" ToRole="Usuarios" />
+        </EntityType>
+        <EntityType Name="Roles">
+          <Key>
+            <PropertyRef Name="idRol" />
+          </Key>
+          <Property Name="idRol" Type="Byte" Nullable="false" />
+          <Property Name="nombreRol" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Usuarios" Relationship="Self.FK_Usuarios_Roles" FromRole="Roles" ToRole="Usuarios" />
+        </EntityType>
+        <EntityType Name="Servicios">
+          <Key>
+            <PropertyRef Name="idServicio" />
+          </Key>
+          <Property Name="idServicio" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Wifi" Type="Boolean" Nullable="false" />
+          <Property Name="AC" Type="Boolean" Nullable="false" />
+          <Property Name="TV" Type="Boolean" Nullable="false" />
+          <Property Name="aguaCaliente" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Categorias" Relationship="Self.FK_Categorias_Servicios" FromRole="Servicios" ToRole="Categorias" />
+        </EntityType>
+        <EntityType Name="Usuarios">
+          <Key>
+            <PropertyRef Name="idUsuario" />
+          </Key>
+          <Property Name="idUsuario" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="correoElectronico" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="contrasenna" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="identificacion" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="estado" Type="Boolean" Nullable="false" />
+          <Property Name="idRol" Type="Byte" Nullable="false" />
+          <Property Name="UsaClaveTemporal" Type="Boolean" Nullable="false" />
+          <Property Name="FechaCaducidad" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Calificaciones" Relationship="Self.FK_Calificaciones_Usuarios" FromRole="Usuarios" ToRole="Calificaciones" />
+          <NavigationProperty Name="Reservas" Relationship="Self.FK_Reservas_Usuarios" FromRole="Usuarios" ToRole="Reservas" />
+          <NavigationProperty Name="Roles" Relationship="Self.FK_Usuarios_Roles" FromRole="Usuarios" ToRole="Roles" />
+        </EntityType>
+        <Association Name="FK_Calificaciones_Usuarios">
+          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="1" />
+          <End Role="Calificaciones" Type="Self.Calificaciones" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuarios">
+              <PropertyRef Name="idUsuario" />
+            </Principal>
+            <Dependent Role="Calificaciones">
+              <PropertyRef Name="idUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Hoteles_Calificaciones">
+          <End Role="Calificaciones" Type="Self.Calificaciones" Multiplicity="1" />
+          <End Role="Hoteles" Type="Self.Hoteles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Calificaciones">
+              <PropertyRef Name="idCalificacion" />
+            </Principal>
+            <Dependent Role="Hoteles">
+              <PropertyRef Name="idCalificacion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Categorias_Servicios">
+          <End Role="Servicios" Type="Self.Servicios" Multiplicity="1" />
+          <End Role="Categorias" Type="Self.Categorias" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Servicios">
+              <PropertyRef Name="idServicio" />
+            </Principal>
+            <Dependent Role="Categorias">
+              <PropertyRef Name="idServicio" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Habitaciones_Categorias">
+          <End Role="Categorias" Type="Self.Categorias" Multiplicity="1" />
+          <End Role="Habitaciones" Type="Self.Habitaciones" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Categorias">
+              <PropertyRef Name="idCategoria" />
+            </Principal>
+            <Dependent Role="Habitaciones">
+              <PropertyRef Name="idCategoria" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Facturas_Reservas">
+          <End Role="Reservas" Type="Self.Reservas" Multiplicity="1" />
+          <End Role="Facturas" Type="Self.Facturas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Reservas">
+              <PropertyRef Name="idReserva" />
+            </Principal>
+            <Dependent Role="Facturas">
+              <PropertyRef Name="idReserva" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Habitaciones_Hoteles">
+          <End Role="Hoteles" Type="Self.Hoteles" Multiplicity="1" />
+          <End Role="Habitaciones" Type="Self.Habitaciones" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Hoteles">
+              <PropertyRef Name="idHotel" />
+            </Principal>
+            <Dependent Role="Habitaciones">
+              <PropertyRef Name="idHotel" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Reservas_Habitaciones">
+          <End Role="Habitaciones" Type="Self.Habitaciones" Multiplicity="1" />
+          <End Role="Reservas" Type="Self.Reservas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Habitaciones">
+              <PropertyRef Name="idHabitacion" />
+            </Principal>
+            <Dependent Role="Reservas">
+              <PropertyRef Name="idHabitacion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Reservas_Usuarios">
+          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="1" />
+          <End Role="Reservas" Type="Self.Reservas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuarios">
+              <PropertyRef Name="idUsuario" />
+            </Principal>
+            <Dependent Role="Reservas">
+              <PropertyRef Name="idUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Usuarios_Roles">
+          <End Role="Roles" Type="Self.Roles" Multiplicity="1" />
+          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Roles">
+              <PropertyRef Name="idRol" />
+            </Principal>
+            <Dependent Role="Usuarios">
+              <PropertyRef Name="idRol" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Proyecto_HotelesEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Calificaciones" EntityType="Self.Calificaciones" />
+          <EntitySet Name="Categorias" EntityType="Self.Categorias" />
+          <EntitySet Name="Errores" EntityType="Self.Errores" />
+          <EntitySet Name="Facturas" EntityType="Self.Facturas" />
+          <EntitySet Name="Habitaciones" EntityType="Self.Habitaciones" />
+          <EntitySet Name="Hoteles" EntityType="Self.Hoteles" />
+          <EntitySet Name="Reservas" EntityType="Self.Reservas" />
+          <EntitySet Name="Roles" EntityType="Self.Roles" />
+          <EntitySet Name="Servicios" EntityType="Self.Servicios" />
+          <EntitySet Name="Usuarios" EntityType="Self.Usuarios" />
+          <AssociationSet Name="FK_Calificaciones_Usuarios" Association="Self.FK_Calificaciones_Usuarios">
+            <End Role="Usuarios" EntitySet="Usuarios" />
+            <End Role="Calificaciones" EntitySet="Calificaciones" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Hoteles_Calificaciones" Association="Self.FK_Hoteles_Calificaciones">
+            <End Role="Calificaciones" EntitySet="Calificaciones" />
+            <End Role="Hoteles" EntitySet="Hoteles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Categorias_Servicios" Association="Self.FK_Categorias_Servicios">
+            <End Role="Servicios" EntitySet="Servicios" />
+            <End Role="Categorias" EntitySet="Categorias" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Habitaciones_Categorias" Association="Self.FK_Habitaciones_Categorias">
+            <End Role="Categorias" EntitySet="Categorias" />
+            <End Role="Habitaciones" EntitySet="Habitaciones" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Facturas_Reservas" Association="Self.FK_Facturas_Reservas">
+            <End Role="Reservas" EntitySet="Reservas" />
+            <End Role="Facturas" EntitySet="Facturas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Habitaciones_Hoteles" Association="Self.FK_Habitaciones_Hoteles">
+            <End Role="Hoteles" EntitySet="Hoteles" />
+            <End Role="Habitaciones" EntitySet="Habitaciones" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Reservas_Habitaciones" Association="Self.FK_Reservas_Habitaciones">
+            <End Role="Habitaciones" EntitySet="Habitaciones" />
+            <End Role="Reservas" EntitySet="Reservas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Reservas_Usuarios" Association="Self.FK_Reservas_Usuarios">
+            <End Role="Usuarios" EntitySet="Usuarios" />
+            <End Role="Reservas" EntitySet="Reservas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Usuarios_Roles" Association="Self.FK_Usuarios_Roles">
+            <End Role="Roles" EntitySet="Roles" />
+            <End Role="Usuarios" EntitySet="Usuarios" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Proyecto_HotelesModelStoreContainer" CdmEntityContainer="Proyecto_HotelesEntities">
+          <EntitySetMapping Name="Calificaciones">
+            <EntityTypeMapping TypeName="Proyecto_HotelesModel.Calificaciones">
+              <MappingFragment StoreEntitySet="Calificaciones">
+                <ScalarProperty Name="idCalificacion" ColumnName="idCalificacion" />
+                <ScalarProperty Name="idUsuario" ColumnName="idUsuario" />
+                <ScalarProperty Name="calificacion" ColumnName="calificacion" />
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Categorias">
+            <EntityTypeMapping TypeName="Proyecto_HotelesModel.Categorias">
+              <MappingFragment StoreEntitySet="Categorias">
+                <ScalarProperty Name="idCategoria" ColumnName="idCategoria" />
+                <ScalarProperty Name="nombreCategoria" ColumnName="nombreCategoria" />
+                <ScalarProperty Name="precio" ColumnName="precio" />
+                <ScalarProperty Name="capacidad" ColumnName="capacidad" />
+                <ScalarProperty Name="idServicio" ColumnName="idServicio" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Errores">
+            <EntityTypeMapping TypeName="Proyecto_HotelesModel.Errores">
+              <MappingFragment StoreEntitySet="Errores">
+                <ScalarProperty Name="idError" ColumnName="idError" />
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Facturas">
+            <EntityTypeMapping TypeName="Proyecto_HotelesModel.Facturas">
+              <MappingFragment StoreEntitySet="Facturas">
+                <ScalarProperty Name="idFactura" ColumnName="idFactura" />
+                <ScalarProperty Name="idReserva" ColumnName="idReserva" />
+                <ScalarProperty Name="precio" ColumnName="precio" />
+                <ScalarProperty Name="IVA" ColumnName="IVA" />
+                <ScalarProperty Name="total" ColumnName="total" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Habitaciones">
+            <EntityTypeMapping TypeName="Proyecto_HotelesModel.Habitaciones">
+              <MappingFragment StoreEntitySet="Habitaciones">
+                <ScalarProperty Name="idHabitacion" ColumnName="idHabitacion" />
+                <ScalarProperty Name="idCategoria" ColumnName="idCategoria" />
+                <ScalarProperty Name="idHotel" ColumnName="idHotel" />
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+                <ScalarProperty Name="disponible" ColumnName="disponible" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Hoteles">
+            <EntityTypeMapping TypeName="Proyecto_HotelesModel.Hoteles">
+              <MappingFragment StoreEntitySet="Hoteles">
+                <ScalarProperty Name="idHotel" ColumnName="idHotel" />
+                <ScalarProperty Name="ubicacion" ColumnName="ubicacion" />
+                <ScalarProperty Name="idCalificacion" ColumnName="idCalificacion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Reservas">
+            <EntityTypeMapping TypeName="Proyecto_HotelesModel.Reservas">
+              <MappingFragment StoreEntitySet="Reservas">
+                <ScalarProperty Name="idReserva" ColumnName="idReserva" />
+                <ScalarProperty Name="idHabitacion" ColumnName="idHabitacion" />
+                <ScalarProperty Name="idUsuario" ColumnName="idUsuario" />
+                <ScalarProperty Name="fechaIngreso" ColumnName="fechaIngreso" />
+                <ScalarProperty Name="fechaEgreso" ColumnName="fechaEgreso" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Roles">
+            <EntityTypeMapping TypeName="Proyecto_HotelesModel.Roles">
+              <MappingFragment StoreEntitySet="Roles">
+                <ScalarProperty Name="idRol" ColumnName="idRol" />
+                <ScalarProperty Name="nombreRol" ColumnName="nombreRol" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Servicios">
+            <EntityTypeMapping TypeName="Proyecto_HotelesModel.Servicios">
+              <MappingFragment StoreEntitySet="Servicios">
+                <ScalarProperty Name="idServicio" ColumnName="idServicio" />
+                <ScalarProperty Name="Wifi" ColumnName="Wifi" />
+                <ScalarProperty Name="AC" ColumnName="AC" />
+                <ScalarProperty Name="TV" ColumnName="TV" />
+                <ScalarProperty Name="aguaCaliente" ColumnName="aguaCaliente" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Usuarios">
+            <EntityTypeMapping TypeName="Proyecto_HotelesModel.Usuarios">
+              <MappingFragment StoreEntitySet="Usuarios">
+                <ScalarProperty Name="idUsuario" ColumnName="idUsuario" />
+                <ScalarProperty Name="correoElectronico" ColumnName="correoElectronico" />
+                <ScalarProperty Name="contrasenna" ColumnName="contrasenna" />
+                <ScalarProperty Name="identificacion" ColumnName="identificacion" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="estado" ColumnName="estado" />
+                <ScalarProperty Name="idRol" ColumnName="idRol" />
+                <ScalarProperty Name="UsaClaveTemporal" ColumnName="UsaClaveTemporal" />
+                <ScalarProperty Name="FechaCaducidad" ColumnName="FechaCaducidad" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
