@@ -59,6 +59,7 @@ namespace ProgramacionAvanzada_Proyecto_G2_API.Controllers
 
 
         }
+
         [HttpPost]
         [Route("api/Registrarse")]
         public int Registrarse(UsuarioEnt entidad)
@@ -81,6 +82,7 @@ namespace ProgramacionAvanzada_Proyecto_G2_API.Controllers
 
         }
 
+        [HttpPost]
         public bool RecuperarContrasenna(UsuarioEnt entidad)
         {
             using (var bd = new Proyecto_HotelesEntities())
