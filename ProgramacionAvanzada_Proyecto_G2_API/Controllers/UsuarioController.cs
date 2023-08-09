@@ -4,15 +4,16 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using ProgramacionAvanzada_Proyecto_G2_API.Models;
+using ProgramacionAvanzada_Proyecto_G2_API.Models.ViewModel;
 using ProgramacionAvanzada_Proyecto_G2_API.Entities;
 using System.Text;
+using ProgramacionAvanzada_Proyecto_G2_API.Models;
 
 namespace ProgramacionAvanzada_Proyecto_G2_API.Controllers
 {
     public class UsuarioController : ApiController
     {
-        generales model = new generales();
+        UtilitariosViewModel model = new UtilitariosViewModel();
 
         [HttpPost]
         [Route("api/IniciarSesion")]
@@ -73,14 +74,15 @@ namespace ProgramacionAvanzada_Proyecto_G2_API.Controllers
                 tabla.estado = entidad.estado;
                 tabla.idRol = entidad.idRol;
                 tabla.FechaCaducidad = DateTime.Now;
-                
+
 
                 bd.Usuarios.Add(tabla);
                 return bd.SaveChanges();
             }
 
         }
-
+        [HttpPost]
+        [Route("api/RecuperarContrasenna")]
         public bool RecuperarContrasenna(UsuarioEnt entidad)
         {
             using (var bd = new Proyecto_HotelesEntities())
@@ -116,10 +118,27 @@ namespace ProgramacionAvanzada_Proyecto_G2_API.Controllers
             }
             return false;
         }
+        [HttpPut]
+        [Route("api/CambiarContrasenna")]
+        public int CambiarContrasenna(UsuarioEnt entidad)
+        {
+            using (var bd = new Proyecto_HotelesEntities())
+            {
+                var datos = (from x in bd.Usuarios
+                             where x.idUsuario == entidad.idUsuario
+                             select x).FirstOrDefault();
 
-        
+                if (datos != null)
+                {
+                    datos.contrasenna = entidad.contrasennaNueva;
+                    datos.UsaClaveTemporal = false;
+                    datos.FechaCaducidad = DateTime.Now;
+                    return bd.SaveChanges();
+                }
+                return 0;
+            }
+        }
+
+
     }
 }
-
-        
-        

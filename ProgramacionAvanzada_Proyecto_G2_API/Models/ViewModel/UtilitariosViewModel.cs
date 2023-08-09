@@ -7,9 +7,9 @@ using System.Net.Mail;
 using System.Text;
 using System.Web;
 
-namespace ProgramacionAvanzada_Proyecto_G2_API.Models
+namespace ProgramacionAvanzada_Proyecto_G2_API.Models.ViewModel
 {
-    public class generales
+    public class UtilitariosViewModel
     {
 
         public string CreatePassword()
